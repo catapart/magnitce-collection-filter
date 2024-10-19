@@ -1,0 +1,42 @@
+svg
+{
+    width: 12px;
+    height: 12px;
+}
+
+button
+{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--button-padding, 2px 5px);
+}
+
+search, form, [part="query"]
+{
+    display: flex;
+    min-width:0;
+    flex: 1;
+}
+
+[part="query"] input
+{
+    flex: 1;
+    min-width: 0;
+}
+
+
+button
+{
+    border: solid 1px transparent;
+}
+:host([regex]) [part="regex-button"]
+{
+    border-color: highlight;
+}
+
+[part="filter-button"]
+{
+    display: none;
+    /* functionality has not been implemented */
+}

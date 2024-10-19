@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collection Filter Demo</title>
+    <link rel="stylesheet" href="./demo-page.css">
+</head>
+<body>
+    <main>
+        <h1>Overview</h1>
+        <div class="overview">
+            <p>The <code>&lt;collection-filter&gt;</code> element is a utility to simplify collecting a query from a user, and then using that query to filter an arbitrary collection of elements.</p>
+            <p>The element provides a text query along with a regex indicator, to toggle regex matching on the collection items. It is meant to be used like a "search bar".</p>
+        </div>
+        <h1>Examples</h1>
+        <article class="basic">
+            <header>Basic Example</header>
+                <p>The <code>&lt;collection-filter&gt;</code> element prepares a query from user input and provides that query on the <code>change</code> event's <code>detail</code> property.</p>
+                <p>In the example below, the <code>change</code> event is handled with a custom function that does the following:</p>
+                <ul>
+                    <li>Detects if the query is empty and, if so, clears all matching elements.</li>
+                    <li>Uses the <code>filterElements</code> method to find all of the elements in the example whose text content matches the query.</li>
+                    <li>Adds or removes a <code>match</code> class to each example element, depending upon whether they match the query or not.</li>
+                </ul>
+                <p>Try searching for "A", then "B", and then "F" to see the different collections that are selected, based on the text content.</p>
+                <p>Note how matches can occur anywhere within the text, instead of requring an exact text match. In the case that exact text matches are expected, use the regex toggle to perform a Regular Expressions text search.</p>
+            </div>
+            <div class="example">
+                <style>
+                    .basic div.match
+                    {
+                        background-color: highlight;
+                        color: highlighttext;
+                    }
+                </style>
+                <collection-filter></collection-filter>
+                <div>
+                    <div>A</div>
+                    <div>B</div>
+                    <div>C</div>
+                    <div>D</div>
+                    <div>E</div>
+                    <div>F</div>
+                    <div>Far</div>
+                    <div>Fear</div>
+                    <div>Big</div>
+                    <div>Dandy</div>
+                </div>
+            </div>
+            <script>
+                const basicExample = document.querySelector('article.basic');
+                document.addEventListener('DOMContentLoaded', () =>
+                {
+                    const filter = basicExample.querySelector('collection-filter');
+                    const collection = basicExample.querySelector('div > div');
+                    const basicItems = [...collection.querySelectorAll('div')];
+
+                    filter.addEventListener('change', (event) =>
+                    {
+                        const customEvent = event;
+                        const filters = customEvent.detail.filters;
+
+                        // if no filters were applied, the query is empty
+                        // we can clear all elements of the 'match' class
+                        // and exit the function
+                        if(filters.length == 0)
+                        {
+                            for(let i = 0; i < basicItems.length; i++)
+                            {
+                                basicItems[i].classList.remove('match');
+                            }
+                            return;
+                        }
+
+                        // if there are filters, use filterElements
+                        // on all elements you want to filter, in 
+                        // order to get ItemFilterMatch objects
+                        const matches = filter.filterElements(basicItems);
+
+                        // for each match, extract the corresponding element
+                        const items = matches.map((match) => match.item);
+
+                        // loop through all of the items and remove
+                        // their match class to reset them, and then
+                        // check to see if they were one of the items
+                        // that matched, to add the match class.
+                        for(let i = 0; i < basicItems.length; i++)
+                        {
+                            basicItems[i].classList.remove('match');
+                            if(items.indexOf(basicItems[i]) > -1)
+                            {
+                                basicItems[i].classList.add('match');
+                            }
+                        }
+                    });
+
+                });
+            </script>
+        </article>
+        <article class="custom-filter-value">
+            <header>Custom Filter Property Value</header>
+                <p>The <code>&lt;collection-filter&gt;</code> element is not limited to searching for the text content of the elements it filters. The <code>data-filter-property</code> attribute can be used to provide a key for matching on.</p>
+                <p>In this example, the "E" element has been given the <code>data-filter-property</code> attribute of "a" so that it won't match on "E", but will match on "A", along with the rest of the eleemnts that match the "A" query:</p>
+            </div>
+            <div class="example">
+                <style>
+                    .custom-filter-value div.match
+                    {
+                        background-color: highlight;
+                        color: highlighttext;
+                    }
+                </style>
+                <collection-filter></collection-filter>
+                <div>
+                    <div data-filter-property="a">A</div>
+                    <div data-filter-property="b">B</div>
+                    <div data-filter-property="c">C</div>
+                    <div data-filter-property="d">D</div>
+                    <div data-filter-property="a">E</div>
+                    <div data-filter-property="f">F</div>
+                    <div data-filter-property="far">Far</div>
+                    <div data-filter-property="fear">Fear</div>
+                    <div data-filter-property="big">Big</div>
+                    <div data-filter-property="dandy">Dandy</div>
+                </div>
+            </div>
+            <script>
+                const customFilterValueExample = document.querySelector('article.custom-filter-value');
+                document.addEventListener('DOMContentLoaded', () =>
+                {
+                    const filter = customFilterValueExample.querySelector('collection-filter');
+                    const collection = customFilterValueExample.querySelector('div > div');
+                    filter.addEventListener('change', (event) =>
+                    {
+                        const allItems = [...collection.querySelectorAll('div')];
+
+                        const filters = event.detail.filters;
+                        if(filters.length == 0)
+                        {
+                            for(let i = 0; i < allItems.length; i++)
+                            {
+                                allItems[i].classList.remove('match');
+                            }
+                            return;
+                        }
+
+                        const items = filter.filterElements(allItems).map((match) => match.item);
+                        for(let i = 0; i < allItems.length; i++)
+                        {
+                            allItems[i].classList.remove('match');
+                            if(items.indexOf(allItems[i]) > -1)
+                            {
+                                allItems[i].classList.add('match');
+                            }
+                        }
+                    });
+
+                });
+            </script>
+        </article>
+        <article class="custom-filter-property">
+            <header>Custom Filter Property</header>
+                <p>The <code>&lt;collection-filter&gt;</code> element's <code>filter-property</code> attribute allows customization of the attribute that is used for matching items.</p>
+                <p>Whatever value is provided to the <code>filter-property</code> attribute will be the attribute name that the <code>filterElements()</code> method will will match on.</p>
+                <p>In this example, the <code>filter-property</code> is set to <code>data-name</code>, and each item has a <code>data-name</code> attribute with a value for matching. The attributes are keyed "a" through "j", and they all also have a key of "name".</p>
+                <p>Note how the "Far" and "Fear" examples are not matched when searching "F", but every element is matched when searching for "n", "a", "m", or "e":</p>
+            </div>
+            <div class="example">
+                <style>
+                    .custom-filter-property div.match
+                    {
+                        background-color: highlight;
+                        color: highlighttext;
+                    }
+                </style>
+                <collection-filter filter-property="data-name"></collection-filter>
+                <div>
+                    <div data-name="a name">A</div>
+                    <div data-name="b name">B</div>
+                    <div data-name="c name">C</div>
+                    <div data-name="d name">D</div>
+                    <div data-name="e name">E</div>
+                    <div data-name="f name">F</div>
+                    <div data-name="g name">Far</div>
+                    <div data-name="h name">Fear</div>
+                    <div data-name="i name">Big</div>
+                    <div data-name="j name">Dandy</div>
+                </div>
+            </div>
+            <script>
+                const customFilterPropertyExample = document.querySelector('article.custom-filter-property');
+                document.addEventListener('DOMContentLoaded', () =>
+                {
+                    const filter = customFilterPropertyExample.querySelector('collection-filter');
+                    const collection = customFilterPropertyExample.querySelector('div > div');
+                    filter.addEventListener('change', (event) =>
+                    {
+                        const customEvent = event;
+
+                        const allItems = [...collection.querySelectorAll('div')];
+
+                        const filters = customEvent.detail.filters;
+                        if(filters.length == 0)
+                        {
+                            for(let i = 0; i < allItems.length; i++)
+                            {
+                                allItems[i].classList.remove('match');
+                            }
+                            return;
+                        }
+
+                        const items = filter.filterElements(allItems).map((match) => match.item);
+                        for(let i = 0; i < allItems.length; i++)
+                        {
+                            allItems[i].classList.remove('match');
+                            if(items.indexOf(allItems[i]) > -1)
+                            {
+                                allItems[i].classList.add('match');
+                            }
+                        }
+                        // console.log(filters, items);
+                    });
+
+                });
+            </script>
+        </article>
+        <article class="events">
+            <header>Events</header>
+            <div class="description">
+                <p>The <code>&lt;collection-filter&gt;</code> element dispatches a <code>change</code> event whenever a query is submitted by a user, or whenever the query's input changes to an empty value.</p>
+                <p>In the following example, each change event has its <code>detail</code> property logged in the event log, and the matching results from the <code>filterElements()</code> method logged in the matches log:</p>
+            </div>
+            <div class="example">
+                <collection-filter></collection-filter>
+                <div class="items">
+                    <div>A</div>
+                    <div>B</div>
+                    <div>C</div>
+                    <div>D</div>
+                    <div>E</div>
+                    <div>F</div>
+                    <div>Far</div>
+                    <div>Fear</div>
+                    <div>Big</div>
+                    <div>Dandy</div>
+                    <div data-filter-property="F">OOOO</div>
+                </div>
+            </div>
+            <div class="log">
+                <header>
+                    <span class="title">Event Log</span>
+                </header>
+                <ul></ul>
+            </div>
+            <div class="log match">
+                <header>
+                    <span class="title">Matches Log</span>
+                </header>
+                <ul></ul>
+            </div>
+            <script type="module">
+                const eventsExample = document.querySelector('article.events');
+                const eventsFilter = eventsExample.querySelector('collection-filter');
+                const eventsLog = document.querySelector('article.events .log ul');
+                const matchLog = document.querySelector('article.events .log.match ul');
+                const eventsItems = document.querySelector('article.events .items');
+                document.addEventListener('DOMContentLoaded', () =>
+                {                    
+                    eventsFilter.addEventListener('change', (event) =>
+                    {
+                        console.log(event);
+                        logEditResult({ filters: event.detail.filters });
+                    });
+                    eventsFilter.addEventListener('change', (event) =>
+                    {
+                        const items = eventsItems.querySelectorAll('div');
+                        const matches = eventsFilter.filterElements(items);
+                        console.log(matches);
+                        logMatchResult({ matches });
+                    });
+                });
+                function logEditResult(result)
+                {
+                    const entry = document.createElement('li');
+                    entry.textContent = JSON.stringify(result, null, 2);
+                    entry.classList.add('entry');
+                    eventsLog.append(entry);
+                }
+                function logMatchResult(result)
+                {
+                    const entry = document.createElement('li');
+                    const container = document.createElement('pre');
+                    container.textContent = JSON.stringify(result, null, 2);
+                    entry.classList.add('entry');
+                    entry.append(container);
+                    matchLog.append(entry);
+                }
+            </script>
+        </article>
+    </main>
+    <script type="module" src="../vanilla/collection-filter.js"></script>
+</body>
+</html>
