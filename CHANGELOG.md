@@ -1,5 +1,11 @@
 # @magnit-ce/collection-filter
 
+## 0.0.4
+
+### Patch Changes
+
+- fd482a6: fixed README title
+
 ## 0.0.3
 
 ### Patch Changes
