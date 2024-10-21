@@ -1,4 +1,4 @@
-# magnitce-captioned-thumbnail
+# magnitce-collection-filter
 A custom `HTMLElement` that provides a query input and helper functions for using its query to filter a collection of html elements. 
 
 Package size: ~19kb minified, ~23kb verbose.
