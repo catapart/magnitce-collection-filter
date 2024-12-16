@@ -3,19 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Collection Filter Demo</title>
+    <title>&lt;collection-filter&gt; Demo</title>
     <link rel="stylesheet" href="./demo-page.css">
 </head>
 <body>
-    <main>
-        <h1>Overview</h1>
+    <main class="centered-single-column">
+        <header class="full-width">
+            <div class="content centered-single-column">
+                <h1>The <code>collection-browser</code> element</h1>
+            </div>
+        </header>
         <div class="overview">
+            <h2>Overview</h2>
             <p>The <code>&lt;collection-filter&gt;</code> element is a utility to simplify collecting a query from a user, and then using that query to filter an arbitrary collection of elements.</p>
             <p>The element provides a text query along with a regex indicator, to toggle regex matching on the collection items. It is meant to be used like a "search bar".</p>
         </div>
-        <h1>Examples</h1>
         <article class="basic">
-            <header>Basic Example</header>
+            <h2>Basic Example</h2>
+            <div class="description">
                 <p>The <code>&lt;collection-filter&gt;</code> element prepares a query from user input and provides that query on the <code>change</code> event's <code>detail</code> property.</p>
                 <p>In the example below, the <code>change</code> event is handled with a custom function that does the following:</p>
                 <ul>
@@ -99,7 +104,8 @@
             </script>
         </article>
         <article class="custom-filter-value">
-            <header>Custom Filter Property Value</header>
+            <h2>Custom Filter Property Value</h2>
+            <div class="description">
                 <p>The <code>&lt;collection-filter&gt;</code> element is not limited to searching for the text content of the elements it filters. The <code>data-filter-property</code> attribute can be used to provide a key for matching on.</p>
                 <p>In this example, the "E" element has been given the <code>data-filter-property</code> attribute of "a" so that it won't match on "E", but will match on "A", along with the rest of the eleemnts that match the "A" query:</p>
             </div>
@@ -160,7 +166,8 @@
             </script>
         </article>
         <article class="custom-filter-property">
-            <header>Custom Filter Property</header>
+            <h2>Custom Filter Property</h2>
+            <div class="description">
                 <p>The <code>&lt;collection-filter&gt;</code> element's <code>filter-property</code> attribute allows customization of the attribute that is used for matching items.</p>
                 <p>Whatever value is provided to the <code>filter-property</code> attribute will be the attribute name that the <code>filterElements()</code> method will will match on.</p>
                 <p>In this example, the <code>filter-property</code> is set to <code>data-name</code>, and each item has a <code>data-name</code> attribute with a value for matching. The attributes are keyed "a" through "j", and they all also have a key of "name".</p>
@@ -226,7 +233,7 @@
             </script>
         </article>
         <article class="events">
-            <header>Events</header>
+            <h2>Events</h2>
             <div class="description">
                 <p>The <code>&lt;collection-filter&gt;</code> element dispatches a <code>change</code> event whenever a query is submitted by a user, or whenever the query's input changes to an empty value.</p>
                 <p>In the following example, each change event has its <code>detail</code> property logged in the event log, and the matching results from the <code>filterElements()</code> method logged in the matches log:</p>
