@@ -1,5 +1,11 @@
 # @magnit-ce/collection-filter
 
+## 0.0.6
+
+### Patch Changes
+
+- 2a25a4c: updated search icon part assignment
+
 ## 0.0.5
 
 ### Patch Changes
