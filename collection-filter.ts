@@ -29,17 +29,17 @@ export class CollectionFilterElement extends HTMLElement
     // ]);
 
     componentParts: Map<string, HTMLElement> = new Map();
-    getPart<T extends HTMLElement = HTMLElement>(key: string)
+    getElement<T extends HTMLElement = HTMLElement>(id: string)
     {
-        if(this.componentParts.get(key) == null)
+        if(this.componentParts.get(id) == null)
         {
-            const part = this.shadowRoot!.querySelector(`[part="${key}"]`) as HTMLElement;
-            if(part != null) { this.componentParts.set(key, part); }
+            const part = this.findElement(id);
+            if(part != null) { this.componentParts.set(id, part); }
         }
 
-        return this.componentParts.get(key) as T;
+        return this.componentParts.get(id) as T;
     }
-    findPart<T extends HTMLElement = HTMLElement>(key: string) { return this.shadowRoot!.querySelector(`[part="${key}"]`) as T; }
+    findElement<T extends HTMLElement = HTMLElement>(id: string) { return this.shadowRoot!.getElementById(id) as T; }
 
     itemFilters: ItemFilters = new ItemFilters();
 
@@ -63,11 +63,11 @@ export class CollectionFilterElement extends HTMLElement
         this.shadowRoot!.adoptedStyleSheets.push(COMPONENT_STYLESHEET);
         
         
-        this.findPart('form').addEventListener('submit', (event: SubmitEvent) =>
+        this.findElement('form').addEventListener('submit', (event: SubmitEvent) =>
         {
             const mode = this.hasAttribute('regex') ? 'regex' : null;
             const queryComparison = mode == 'regex' ? this.regexQueryComparison : this.textQueryComparison;
-            this.itemFilters.setQuery(this.findPart<HTMLInputElement>('input').value, queryComparison, mode);
+            this.itemFilters.setQuery(this.findElement<HTMLInputElement>('input').value, queryComparison, mode);
 
             this.dispatchEvent(new CustomEvent('change', { detail: { filters: this.itemFilters.filters }}));
 
@@ -76,7 +76,7 @@ export class CollectionFilterElement extends HTMLElement
             return false;
         });
 
-        this.findPart('regex-button').addEventListener('click', () =>
+        this.findElement('regex-button').addEventListener('click', () =>
         {
             if(this.hasAttribute('regex'))
             {
@@ -93,7 +93,7 @@ export class CollectionFilterElement extends HTMLElement
         //     console.error('New Filter not implemented');
         // });
 
-        this.findPart('input').addEventListener('input', (event: Event) =>
+        this.findElement('input').addEventListener('input', (event: Event) =>
         {
             if((event.currentTarget! as HTMLInputElement).value == "")
             {
@@ -109,7 +109,7 @@ export class CollectionFilterElement extends HTMLElement
     {
         if(attributeName == "placeholder")
         {
-            this.findPart<HTMLInputElement>('input').placeholder = newValue;
+            this.findElement<HTMLInputElement>('input').placeholder = newValue;
         }
     }
 
@@ -156,6 +156,24 @@ export class CollectionFilterElement extends HTMLElement
     // {
     //     this.itemFilters.removeFilter(index);
     // }
+
+    connectedCallback()
+    {
+        this.#applyPartAttributes();
+    }
+    #applyPartAttributes()
+    {
+        const identifiedElements = [...this.shadowRoot!.querySelectorAll('[id]')];
+        for(let i = 0; i < identifiedElements.length; i++)
+        {
+            identifiedElements[i].part.add(identifiedElements[i].id);
+        }
+        const classedElements = [...this.shadowRoot!.querySelectorAll('[class]')];
+        for(let i = 0; i < classedElements.length; i++)
+        {
+            classedElements[i].part.add(...classedElements[i].classList);
+        }
+    }
 }
 
 if(customElements.get(COMPONENT_TAG_NAME) == null)

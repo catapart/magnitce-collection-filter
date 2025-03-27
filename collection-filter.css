@@ -12,30 +12,30 @@ button
     padding: var(--button-padding, 2px 5px);
 }
 
-search, form, [part="query"]
+search, form, #query
 {
     display: flex;
     min-width:0;
     flex: 1;
 }
 
-[part="query"] input
+#input
 {
     flex: 1;
     min-width: 0;
 }
 
 
-button
+.button
 {
     border: solid 1px transparent;
 }
-:host([regex]) [part="regex-button"]
+:host([regex]) #regex-button
 {
     border-color: highlight;
 }
 
-[part="filter-button"]
+#filter-button
 {
     display: none;
     /* functionality has not been implemented */

@@ -40,9 +40,10 @@ declare class ItemFilters {
 }
 
 declare class CollectionFilterElement extends HTMLElement {
+    #private;
     componentParts: Map<string, HTMLElement>;
-    getPart<T extends HTMLElement = HTMLElement>(key: string): T;
-    findPart<T extends HTMLElement = HTMLElement>(key: string): T;
+    getElement<T extends HTMLElement = HTMLElement>(id: string): T;
+    findElement<T extends HTMLElement = HTMLElement>(id: string): T;
     itemFilters: ItemFilters;
     get filterPropertyAttribute(): string;
     constructor();
@@ -51,6 +52,7 @@ declare class CollectionFilterElement extends HTMLElement {
     filterElements(items: HTMLElement[]): ItemFilterMatch[];
     textQueryComparison(filter: ItemFilter, item: HTMLElement, utilities: ItemFilterUtilities): ItemFilterResult;
     regexQueryComparison(filter: ItemFilter, item: HTMLElement, utilities: ItemFilterUtilities): ItemFilterResult;
+    connectedCallback(): void;
 }
 
 export { CollectionFilterElement };
