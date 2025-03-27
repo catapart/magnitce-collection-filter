@@ -1,5 +1,11 @@
 # @magnit-ce/collection-filter
 
+## 0.0.5
+
+### Patch Changes
+
+- f2f8820: refactored parts assignment
+
 ## 0.0.4
 
 ### Patch Changes
