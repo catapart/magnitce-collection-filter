@@ -1,5 +1,11 @@
 # @magnit-ce/collection-filter
 
+## 0.0.7
+
+### Patch Changes
+
+- ed529ec: added field-button class to buttons
+
 ## 0.0.6
 
 ### Patch Changes
