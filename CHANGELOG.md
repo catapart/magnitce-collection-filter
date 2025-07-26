@@ -1,5 +1,11 @@
 # @magnit-ce/collection-filter
 
+## 0.0.9
+
+### Patch Changes
+
+- 59af938: added regex button parts
+
 ## 0.0.8
 
 ### Patch Changes
