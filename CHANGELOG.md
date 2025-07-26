@@ -1,5 +1,11 @@
 # @magnit-ce/collection-filter
 
+## 0.0.8
+
+### Patch Changes
+
+- aaf6fd6: added regex part handling
+
 ## 0.0.7
 
 ### Patch Changes
