@@ -81,10 +81,12 @@ export class CollectionFilterElement extends HTMLElement
             if(this.hasAttribute('regex'))
             {
                 this.removeAttribute('regex');
+                this.part.remove('regex');
             }
             else
             {
                 this.toggleAttribute('regex', true);
+                this.part.add('regex');
             }
         });
 
