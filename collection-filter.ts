@@ -82,11 +82,13 @@ export class CollectionFilterElement extends HTMLElement
             {
                 this.removeAttribute('regex');
                 this.part.remove('regex');
+                this.findElement('regex-button').part.remove('regex', 'active');
             }
             else
             {
                 this.toggleAttribute('regex', true);
                 this.part.add('regex');
+                this.findElement('regex-button').part.add('regex', 'active');
             }
         });
 

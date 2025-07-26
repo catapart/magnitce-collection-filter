@@ -177,9 +177,11 @@ var CollectionFilterElement = class extends HTMLElement {
       if (this.hasAttribute("regex")) {
         this.removeAttribute("regex");
         this.part.remove("regex");
+        this.findElement("regex-button").part.remove("regex", "active");
       } else {
         this.toggleAttribute("regex", true);
         this.part.add("regex");
+        this.findElement("regex-button").part.add("regex", "active");
       }
     });
     this.findElement("input").addEventListener("input", (event) => {
