@@ -1,172 +1,128 @@
-# magnitce-collection-filter
-A custom `HTMLElement` that provides a query input and helper functions for using its query to filter a collection of html elements. 
+# Warning - Non-production package
+> [!WARNING]  
+> This project is being prepared for production, but is not ready to be used as a dependency for anything. There will be breaking changes and unrecoverable states. Do not use until this warning has been removed.
+> When the library reaches the `1.0.0` designation, that will be a production package. From that point, you can use the major version number (`1` in `1.0.0`) to recognize when breaking changes are introduced.
 
-Package size: ~19kb minified, ~23kb verbose.
-
-## Quick Reference
-```html
-<collection-filter></collection-filter>
-<div>
-    <div>A</div>
-    <div data-filter-property="b">B</div>
-    <div data-filter-property="c">C</div>
-    <div data-filter-property="custom-d">D</div>
-</div>
-<script type="module" src="/path/to/collection-filter[.min].js"></script>
-```
-(*Note: `<collection-filter>` element implements a `<form>` element and, therefore, cannot be placed inside of a `<form>` element.*)
-
-## Demos
-https://catapart.github.io/magnitce-collection-filter/demo/
-
-## Support
-- Firefox
-- Chrome
-- Edge
-- <s>Safari</s> (Has not been tested; should be supported, based on custom element support)
-
-## Getting Started
- 1. [Install/Reference the library](#referenceinstall)
-
-### Reference/Install
-#### HTML Import (not required for vanilla js/ts; alternative to import statement)
-```html
-<script type="module" src="/path/to/collection-filter[.min].js"></script>
-```
-#### npm
-```cmd
-npm install @magnit-ce/collection-filter
-```
-
-### Import
-#### Vanilla js/ts
-```js
-import "/path/to/collection-filter[.min].js"; // if you didn't reference from a <script>, reference with an import like this
-
-import { CollectionFilterElement } from "/path/to/collection-filter[.min].js";
-```
-#### npm
-```js
-import "@magnit-ce/collection-filter"; // if you didn't reference from a <script>, reference with an import like this
-
-import { CollectionFilterElement } from "@magnit-ce/collection-filter";
-```
-
----
----
----
+# The `collection-filter` Custom Element
 
 ## Overview
-The `<collection-filter>` element is intended to provide a simple way of filtering or searching for elements.
+A custom html element that that provides a query input to filter a collection of html elements.
 
-It includes a text input to accept a user's query, as well as a button to toggle whether the query should be run as regex. It also provides a `filterItems()` function which returns a match status object for each item that is passed into the function.
+|||||
+|-|-|-|-|
+|Package size, **verbose**:|~23kb|Package size, **minified**:|~19kb|
 
-By default, the filter will query against either an element's `textContent` or, if the element has a `data-filter-property` attribute, it will use that text as the value to match on.
 
-## Attributes
-|Attribute Name|Description|
-|-|-|
-|`placeholder`|Sets the placeholder value for the query `<input>` element.|
-|`regex`|Sets the `<collection-filter>`'s query type. If present, the query type will be set to `regexQuery`. If not present, the query type will be set to `textQuery`. This attribute is toggled when the regex button is clicked.|
-|`filter-property`|The name of the attribute that will be used to filter element items in the `filterElements()` function. Whatever value is provided for this attribute, that exact string can be used as an attribute on each of the elements provided to the `filterElements()` function, to have those items match based on that attribute, instead of their text content. By default, this value is `data-filter-property`, due to the elements to be filtered being arbitrary, and the `data-` prefixed properties being allowed on any element.|
 
-## Events
-The `<collection-filter>` element dispatches a `change` event any time a user invokes a query, as well as whenever the query `input` changes to an empty value. These events provide a trigger for filtering or removing all filters, based on user input.
-
-The `change` event provides an `Array` of `ItemFilter` objects that describe the filters that the user has invoked. These objects are managed by the element and can currently only be either a `textQuery` type of filter, or a `regexQuery` type of filter. These filter objects are provided as a reference so that if a query does not return the expected results, the filters can be inspected to see where the results were filtered incorrectly.
-
-If the `filters` property of the `change` event's provided `detail` data is an empty array, that indicates that the user has cleared the `<collection-filter>`'s query, and all filtering can be safely removed.
-
-The following example logs the filters during each change event:
+## Quick Start
 ```html
-<collection-filter></collection-filter>
-<div class="items">
-    <div>A</div>
-    <div>B</div>
-    <div>C</div>
-    <div>D</div>
-    <div>E</div>
-    <div>F</div>
-    <div>Far</div>
-    <div>Fear</div>
-    <div>Big</div>
-    <div>Dandy</div>
-    <div data-filter-property="F">OOOO</div>
-</div>
-<script>
-const filter = document.querySelector('collection-filter');
-filter.addEventListener('change', (event) =>
-{
-    console.log(event.detail.filters);
-});
-</script>
+
 ```
 
-## Filtering Elements
-The `<collection-filter>` element provides a function for filtering HTML elements by their text content or by the custom-defined filter property.
+## Links
+### Demo:
+https://catapart.github.io/magnitce-collection-filter
+### Documentation:
+https://catapart.github.io/magnitce-collection-filter/docs
+### Automated Testing:
+https://catapart.github.io/magnitce-collection-filter/tests.html
 
-To use the `filterElements()` function, pass in an array of `HTMLElement`s. Any of the element's that can be matched to the `<collection-filter>`'s current query will be represented in the `QueryMatch` objects that are returned.
+## Repo Notes
+This section provides instructions for how to use the repo to develop the library.
 
-Each `ItemFilterMatch` object provides the `HTMLElement` that was matched, the `ItemFilter` object that described the matching query, and the name of the attribute that was used for a match, if any. It also provides an array of `QueryMatch` objects that describe the exact text that matched, as well as the start and end indexes of where that text is located within the matching string.
-
-The following example logs the matches during each change event:
-```html
-<collection-filter></collection-filter>
-<div class="items">
-    <div>A</div>
-    <div>B</div>
-    <div>C</div>
-    <div>D</div>
-    <div>E</div>
-    <div>F</div>
-    <div>Far</div>
-    <div>Fear</div>
-    <div>Big</div>
-    <div>Dandy</div>
-    <div data-filter-property="F">OOOO</div>
-</div>
-<script>
-const filter = document.querySelector('collection-filter');
-filter.addEventListener('change', (event) =>
-{
-    const items = document.querySelectorAll('.items div');
-    const matches = filter.filterElements(items);
-    console.log(matches);
-});
-</script>
+### Installation
+Install the repo using a package manager:
+```cmd
+npm install
 ```
 
-## Parts
-|Part Name|Description|Element
-|-|-|-|
-|`search`|A container element that indicates the element's functionality to DOM agents.|`HTMLSearchElement`|
-|`form`|A form element that handles user input.|`HTMLFormElement`|
-|`query`|A container element that provides an inline layout for the input and it's related buttons.|`HTMLSpanElement`|
-|`input`|The text input element users can enter their query into.|`HTMLInputElement[type="text"]`|
-|`regex-button`|A button that toggles the `<collection-filter>`'s search type between regex, and text searches.|`HTMLButtonElement[type="button"]`|
-|`regex-icon`|An icon that indicates Regular Expressions.|`SVGElement`|
-|`search-button`|A button that submits the user's query.|`HTMLButtonElement[type="submit"]`|
-|`search-icon`|An icon that indicates submitting a search request.|`SVGElement`|
+### Configuration
+#### `tsconfig.json`
+The `tsconfig.json` file is generated by the `vite` dependency and has not been modified by this library. It uses strict linting and defaults to `es` modules, rather than `commonjs` modules. For more information about each of the `tsconfig.json` options, see the [tsconfig documentation](https://www.typescriptlang.org/tsconfig/).
+#### `vite.config`
+The `vite.config` file sets defaults options for the dev, build, and release processes, which allows the code to be packaged as a library (rather than a website) and defines custom inputs and outputs to exclude tests and create both `es` and `umd` modules. It also includes settings that allow for multiple file outputs with well-defined names and selective minification. For more information about configuring `vite`, see the [vite config documentation](https://vite.dev/config/).
+#### `vite.config.tests.ts`
+This specialized `vite.config` file defines custom inputs and outputs that include tests and then are packaged into the `test-runner` directory, rather than built to the `dist` directory.
 
-## Slots
-The `<collection-filter>` element exposes the following `slot`s: 
-|Slot Name|Description|Default
-|-|-|-|
-|`regex-icon`|An icon that indicates Regular Expressions, dispalyed on the `regex-button` part.|`SVGElement`|
-|`search-icon`|An icon that indicates submitting a search request, displayed on the `search-button` part.|`SVGElement`|
+### Development
+The `src` directory has a `dev` subdirectory that is intended for development. Developers can link to code-test files written in typescript, which allows for full type support while writing tests during development.
 
-## Styling
-The `<collection-filter>` element can be styled with CSS, normally. The `<collection-filter>` element also utilizes the shadowDOM for layout, so styling the internal layout elements must be done using a `::part()` selector.
+Place development tests in the `tests` subdirectory of the `dev` directory. Use the suffix `.tests` to denote that a typescript file is a code-tests file. (*example: `interface.tests.ts`*)
 
-In this example, the `query` part is being selected for styling:
-```css
-collection-filter::part(query)
-{
-    /* styling */
-}
-```
+Once tests have been added, the `build-tests` script can be used to compile the typescript tests into javascript tests that will be available for use in any `<code-tests>` or `<test-runner>` elements - including on the `tests.html` page.
 
-For a list of all part names, see the [parts](#parts) section.
+### Test Page
+The test page (`tests.html`) in the root directory can be used to demonstrate passing tests to users. 
 
-## License
-This library is in the public domain. You do not need permission, nor do you need to provide attribution, in order to use, modify, reproduce, publish, or sell it or any works using it or derived from it.
+Tests can be created in the `src/dev/tests` directory and developed using the dev page. When all tests are passing, use the `build-tests` script to transpile the `.ts` test files into `.js` test files that are deployed to the `public/tests` directory, which can be referenced by the `tests.html` page.
+
+The test page will also expect a reference to the library file, which won't exist until the `build` script has been run. If running the project causes errors, check the test page to either remove the script tags requesting the library file, or build the library to provide the test page with its requested source file.
+
+### Scripts
+#### `dev`
+Use `vite` to begin a server with Hot Module Replacement, which will automatically reload any time a change in a source file is saved.
+#### `build`
+Use `vite` to transpile the source code into code chunks or library files. Files are output into the `dist` directory by default.
+#### `preview`
+Use `vite` to serve the `dist` directory. Useful for non-library projects, where the `dist` directory will contain an `index.html` file, or other browse-able entry point.
+#### `build-tests`
+Use `vite` to transpile all files with a `.tests.[ts|js|tsx|jsx]` extension into the `public/tests` subdirectory. Creates javascript files that can be served to the `<test-runner>` and `<code-tests>` components, which are included in the `public/libs` subdirectory.
+#### `changeset`
+Runs the `npx @changesets/cli` command to create a new changeset which will prepare the library to be published.
+#### `release`
+Use `vite` to transpile the source code and then use `changesets` to begin the publication procedure for the repo environment (github or gitlab).  
+If this script is run during CI/CD for the `main` branch, the library is published to [npm](https://www.npmjs.com/). If it is run during CI/CD for any other branch, the library is linted and compiled. It is expected that this command will *only* be used by a CI/CD pipeline, and **never** by a library dev. Running the `release` script on a local codebase is not supported.
+
+
+### Publishing
+
+#### Releasing with `changesets`
+Publishing is handled using the `changesets` library which starts the process by requiring a manual entry into a running version log. Once you have defined a set of changes as a version change, the automated processes can prepare the library to be published on to `npm`. When the automation has prepared the release, it will create a pull request from a new branch containing the release package. The publishing developer will be required to merge that branch into main, using the pull request, in order to publish a new version.
+
+The step-by-step process is outline below for both Github and Gitlab:
+
+##### Github Steps
+1. **Run `changeset` command**: `npm run changeset` | `bun run changeset` | `pnpm changesets` | `yarn changesets` | `npx @changesets/cli`
+1. **Log version info**: Add a message that describes the changes in this version
+1. **Check in**: Push changes to repo
+1. **Merge**: Merge branch into `main`
+1.  **Merge Automation Branch**: Await repo automation's creation of a new pull request from a newly created branch. Accept the pull request, merging the branch into main.
+
+After automation completes, the new version will be published to `NPM`.
+
+##### Gitlab Steps
+1. **Run `changeset` command**: `npm run changeset` | `bun run changeset` | `pnpm changesets` | `yarn changesets` | `npx @changesets/cli`
+1. **Log version info**: Add a message that describes the changes in this version
+1. **Check in**: Push changes to repo
+1. **Merge**: Merge branch into `main`
+1.  **Merge Automation Branch**: Await repo automation's creation of a new merge request from a newly created branch. Merge the merge request into main.
+
+After automation completes, the new version will be published to `NPM`.
+
+### Dependencies
+
+#### Library Dependencies
+
+
+#### Development Dependencies
+
+##### [`typescript`](https://www.typescriptlang.org/)
+Typescript provides type checking at dev time which adds compile-time safety to the codebase for a wide range of issues. For more information on Typescript, visit its [website](https://www.typescriptlang.org/).
+
+##### [`@changesets/cli`](https://github.com/changesets/changesets)
+The `changesets` library uses a strict process to handle versioning and publishing which makes the update and deployment of any library to NPM a structured and repeatable series of steps. Versioning is managed by a command-line utility which enforces release notes and semantic versions. Publishing is handled automatically by CI/CD pipelines when code is checked in. The structure allows for automated pipelines to handle linting and testing, while requiring manual directives to invoke action. Versions are not accidentally published, because all code changes that haven't been packaged into a changeset are transparent to the library. As soon as a version is updated (by the library), the CI/CD pipelines will trigger and the library developer will need to merge branches in order to complete the publishing. By enforcing these procedures, `changesets` keeps this library releasing traceable and well-versioned packages.
+
+##### [`vite`](https://vite.dev/)
+Vite is a packaging library that includes a lot of features that make development faster and easier. Packaging and minifying are built in as well as "hot module reload" so that saving any source file will reload the script in the development environment instantly. That is made even better because Vite also dynamically swaps typescript references for javascript references, meaning that a development build can target and debug with the typescript files directly. It is also configurable enough to account for a wide variety of project types.
+
+##### [`vite-plugin-dts`](https://www.npmjs.com/package/vite-plugin-dts)
+This plugin for the `vite` library allows the packaging process to also produce a `.d.ts` file to describe all of the Typescript types exposed by the library. Without that export, other projects that use Typescript would not be able to see the full manifest of exported types.
+
+##### [`@rollup/plugin-terser`](https://www.npmjs.com/package/@rollup/plugin-terser)
+This plugin, which was developed for one of `vite`'s dependencies (`rollup`) but is used in this project by `vite`, provides a type of minification that is not supported by the default library. Using this plugin, the library can be packaged with both unminified and minified code, so that developers who implement the library can debug the code in un-minified files, while still being able to ship a minified version without having to minify it in their own projects.
+
+##### [`@magnit-ce/test-runner`](https://github.com/catapart/magnitce-test-runner)
+This library adds custom HTML elements that allow developers to run simple definitions for automated tests directly in a browser. This element is used in the `dev` directory to provide live automated testing.
+
+##### [`glob`](https://www.npmjs.com/package/glob)
+`glob` is a low-level library that provides full-featured search capabilities to a command-line input. These search features are used by this library to differentiate between test files and source files within the `vite.config` files.

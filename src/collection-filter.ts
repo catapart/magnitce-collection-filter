@@ -1,6 +1,6 @@
 import style from './collection-filter.css?raw';
 import html from './collection-filter.html?raw';
-import { ItemFilter, ItemFilterMatch, ItemFilterResult, ItemFilterUtilities, ItemFilters } from './item-filter.filters';
+import { ItemFilter, ItemFilterMatch, type ItemFilterResult, type ItemFilterUtilities, ItemFilters } from './item-filter.filters';
 
 
 // export type CollectionFilterAttributes = 
